@@ -1,4 +1,4 @@
-def display_menu():
+ def display_menu():
     print("\nTo-Do List Menu:")
     print("1. Add a task")
     print("2. View tasks")
