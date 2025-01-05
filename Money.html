@@ -1,0 +1,284 @@
+<html>
+<head>
+    <title>Money Management App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            margin: 20px auto;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            background-color: #333;
+            padding: 10px;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+        }
+        .nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .content .main {
+            width: 100%;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .transaction {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .transaction .details {
+            width: 70%;
+        }
+        .transaction .amount {
+            width: 30%;
+            text-align: right;
+        }
+        .transaction.income .amount {
+            color: green;
+        }
+        .transaction.expense .amount {
+            color: red;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Money Management App</h1>
+    </div>
+    <div class="nav">
+        <a href="#">Home</a>
+        <a href="#">Transactions</a>
+        <a href="#">Reports</a>
+        <a href="#">Settings</a>
+    </div>
+    <div class="container">
+        <div class="content">
+            <div class="main">
+                <h2>Transaction History</h2>
+                <div class="transaction income">
+                    <div class="details">
+                        <p>Salary</p>
+                        <p>Received on 1st Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>+ $5000</p>
+                    </div>
+                </div>
+                <div class="transaction expense">
+                    <div class="details">
+                        <p>Groceries</p>
+                        <p>Spent on 2nd Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>- $200</p>
+                    </div>
+                </div>
+                <div class="transaction expense">
+                    <div class="details">
+                        <p>Electricity Bill</p>
+                        <p>Paid on 3rd Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>- $150</p>
+                    </div>
+                </div>
+                <div class="transaction income">
+                    <div class="details">
+                        <p>Freelance Project</p>
+                        <p>Received on 4th Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>+ $800</p>
+                    </div>
+                </div>
+                <div class="transaction expense">
+                    <div class="details">
+                        <p>Dining Out</p>
+                        <p>Spent on 5th Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>- $100</p>
+                    </div>
+                </div>
+                <div class="transaction expense">
+                    <div class="details">
+                        <p>Internet Bill</p>
+                        <p>Paid on 6th Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>- $50</p>
+                    </div>
+                </div>
+                <div class="transaction income">
+                    <div class="details">
+                        <p>Stock Dividends</p>
+                        <p>Received on 7th Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>+ $300</p>
+                    </div>
+                </div>
+                <div class="transaction expense">
+                    <div class="details">
+                        <p>Fuel</p>
+                        <p>Spent on 8th Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>- $60</p>
+                    </div>
+                </div>
+                <div class="transaction expense">
+                    <div class="details">
+                        <p>Clothing</p>
+                        <p>Spent on 9th Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>- $120</p>
+                    </div>
+                </div>
+                <div class="transaction income">
+                    <div class="details">
+                        <p>Gift</p>
+                        <p>Received on 10th Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>+ $200</p>
+                    </div>
+                </div>
+                <div class="transaction expense">
+                    <div class="details">
+                        <p>Medical Expenses</p>
+                        <p>Spent on 11th Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>- $300</p>
+                    </div>
+                </div>
+                <div class="transaction expense">
+                    <div class="details">
+                        <p>Entertainment</p>
+                        <p>Spent on 12th Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>- $80</p>
+                    </div>
+                </div>
+                <div class="transaction income">
+                    <div class="details">
+                        <p>Bonus</p>
+                        <p>Received on 13th Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>+ $1000</p>
+                    </div>
+                </div>
+                <div class="transaction expense">
+                    <div class="details">
+                        <p>Rent</p>
+                        <p>Paid on 14th Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>- $1200</p>
+                    </div>
+                </div>
+                <div class="transaction expense">
+                    <div class="details">
+                        <p>Insurance</p>
+                        <p>Paid on 15th Jan 2023</p>
+                    </div>
+                    <div class="amount">
+                        <p>- $400</p>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h2>Add Transaction</h2>
+                    <form id="transaction-form">
+                        <div class="mb-4">
+                            <label for="description" class="block text-gray-700">Description</label>
+                            <input type="text" id="description" class="w-full px-3 py-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="amount" class="block text-gray-700">Amount</label>
+                            <input type="number" id="amount" class="w-full px-3 py-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="type" class="block text-gray-700">Type</label>
+                            <select id="type" class="w-full px-3 py-2 border rounded" required>
+                                <option value="income">Income</option>
+                                <option value="expense">Expense</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Add Transaction</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2023 Money Management App</p>
+    </div>
+    <script>
+        document.getElementById('transaction-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const description = document.getElementById('description').value;
+            const amount = document.getElementById('amount').value;
+            const type = document.getElementById('type').value;
+
+            const transactionList = document.querySelector('.main');
+            const transactionDiv = document.createElement('div');
+            transactionDiv.classList.add('transaction', type);
+
+            const detailsDiv = document.createElement('div');
+            detailsDiv.classList.add('details');
+            detailsDiv.innerHTML = `<p>${description}</p><p>Added just now</p>`;
+
+            const amountDiv = document.createElement('div');
+            amountDiv.classList.add('amount');
+            amountDiv.innerHTML = `<p>${type === 'income' ? '+' : '-'} $${amount}</p>`;
+
+            transactionDiv.appendChild(detailsDiv);
+            transactionDiv.appendChild(amountDiv);
+
+            transactionList.appendChild(transactionDiv);
+
+            document.getElementById('transaction-form').reset();
+        });
+    </script>
+</body>
+</html>
