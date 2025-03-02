@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi-Language Code Editor</title>
+  <style>
+    body {
+      background: #1e1e1e;
+      color: #fff;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+    }
+    select, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+    }
+    textarea {
+      height: 300px;
+      background: #2e2e2e;
+      color: #fff;
+      resize: vertical;
+    }
+    button {
+      background: #007acc;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005a99;
+    }
+    .output {
+      background: #2e2e2e;
+      padding: 10px;
+      margin-top: 10px;
+      min-height: 150px;
+      border-radius: 5px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: none;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Multi-Language Code Editor</h1>
+    <select id="language">
+      <option value="javascript">JavaScript</option>
+      <option value="html">HTML</option>
+      <option value="css">CSS</option>
+      <option value="python">Python (Not Supported)</option>
+      <option value="cpp">C++ (Not Supported)</option>
+    </select>
+    <textarea id="codeArea" placeholder="Write your code here..."></textarea>
+    <button onclick="saveCode()">Save Code</button>
+    <button onclick="runCode()">Run Code</button>
+    <div class="output" id="output"></div>
+    <iframe id="resultFrame" style="display:none;"></iframe>
+  </div>
+
+  <script>
+    // Save code in localStorage based on selected language
+    function saveCode() {
+      const lang = document.getElementById('language').value;
+      const code = document.getElementById('codeArea').value;
+      localStorage.setItem('code_' + lang, code);
+      alert('Code saved for ' + lang);
+    }
+
+    // Load saved code when language selection changes
+    document.getElementById('language').addEventListener('change', function() {
+      const lang = this.value;
+      const savedCode = localStorage.getItem('code_' + lang);
+      document.getElementById('codeArea').value = savedCode || '';
+      // Reset output and iframe
+      document.getElementById('resultFrame').style.display = 'none';
+      document.getElementById('output').innerText = '';
+    });
+
+    // Run code based on selected language
+    function runCode() {
+      const lang = document.getElementById('language').value;
+      const code = document.getElementById('codeArea').value;
+      const outputDiv = document.getElementById('output');
+      const resultFrame = document.getElementById('resultFrame');
+
+      // Clear previous outputs
+      outputDiv.innerText = '';
+      resultFrame.style.display = 'none';
+
+      if (lang === 'javascript') {
+        try {
+          let logs = "";
+          // Overriding console.log to capture outputs
+          const originalLog = console.log;
+          console.log = function(...args) {
+            logs += args.join(" ") + "\n";
+            originalLog.apply(console, args);
+          };
+          let result = eval(code);
+          if (result !== undefined) {
+            logs += result;
+          }
+          outputDiv.innerText = logs;
+          console.log = originalLog; // Restore console.log
+        } catch (e) {
+          outputDiv.innerText = e;
+        }
+      } else if (lang === 'html') {
+        resultFrame.style.display = 'block';
+        resultFrame.contentDocument.open();
+        resultFrame.contentDocument.write(code);
+        resultFrame.contentDocument.close();
+      } else if (lang === 'css') {
+        resultFrame.style.display = 'block';
+        // Wrap CSS code in a basic HTML structure
+        const htmlContent = `<html><head><style>${code}</style></head><body><h2>CSS Applied!</h2><p>This is a sample text.</p></body></html>`;
+        resultFrame.contentDocument.open();
+        resultFrame.contentDocument.write(htmlContent);
+        resultFrame.contentDocument.close();
+      } else {
+        outputDiv.innerText = 'Execution for ' + lang + ' is not supported in the browser. Use an external compiler or API.';
+      }
+    }
+
+    // On page load, load saved code for the default language
+    window.onload = function() {
+      const lang = document.getElementById('language').value;
+      const savedCode = localStorage.getItem('code_' + lang);
+      document.getElementById('codeArea').value = savedCode || '';
+    }
+  </script>
+</body>
+</html>
