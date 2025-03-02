@@ -1,16 +1,205 @@
-## Hi there 👋
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background-color: #121212;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        .expense-form, .expense-list {
+            background: #1E1E2E;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            border: none;
+            background: #282A36;
+            color: white;
+        }
+        .btn {
+            background: linear-gradient(135deg, #007BFF, #00D4FF);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #00D4FF, #007BFF);
+        }
+        .expense-item {
+            background: #33354D;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+        }
+        .delete-btn {
+            background: #FF4D4D;
+            color: white;
+            padding: 8px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        /* Menu Button */
+        .menu-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 22px;
+            color: white;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        .dropdown {
+            display: none;
+            position: absolute;
+            background: #282A36;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+            top: 50px;
+        }
+        .dropdown a {
+            color: white;
+            display: block;
+            padding: 5px;
+            text-decoration: none;
+        }
+        .dropdown a:hover {
+            background: #444;
+        }
+    </style>
+</head>
+<body>
 
-<!--
-**himal21/himal21** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+    <div class="container">
+        <!-- Expense Form -->
+        <div class="expense-form">
+            <h2>Add Expense</h2>
+            <input type="text" id="title" placeholder="Title">
+            <input type="number" id="amount" placeholder="Amount">
+            <input type="date" id="date">
+            <button class="btn" onclick="addExpense()">Add Expense</button>
+        </div>
 
-Here are some ideas to get you started:
+        <!-- Logout, Menu, Light Mode Buttons -->
+        <div class="menu-container">
+            <button class="btn">LOGOUT</button>
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+            <!-- Menu Button -->
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+            <!-- Dropdown Menu -->
+            <div id="dropdown-menu" class="dropdown">
+                <a href="#">Profile</a>
+                <a href="#">Settings</a>
+                <a href="#">Help</a>
+            </div>
+
+            <button class="btn">Light Mode</button>
+        </div>
+
+        <!-- Search & Filter -->
+        <div class="expense-form">
+            <input type="text" id="search" placeholder="Search expenses..." onkeyup="filterExpenses()">
+            <select id="filter">
+                <option value="date">Date</option>
+                <option value="amount">Amount</option>
+            </select>
+        </div>
+
+        <!-- Expense List -->
+        <div class="expense-list" id="expense-list">
+            <!-- Expenses will be added here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        function addExpense() {
+            let title = document.getElementById("title").value;
+            let amount = document.getElementById("amount").value;
+            let date = document.getElementById("date").value;
+
+            if (title === "" || amount === "" || date === "") {
+                alert("Please fill all fields!");
+                return;
+            }
+
+            let expenseList = document.getElementById("expense-list");
+
+            let expenseItem = document.createElement("div");
+            expenseItem.classList.add("expense-item");
+            expenseItem.innerHTML = `
+                <div>${title} - ₹${amount} - ${date}</div>
+                <button class="delete-btn" onclick="deleteExpense(this)">Delete</button>
+            `;
+
+            expenseList.appendChild(expenseItem);
+
+            document.getElementById("title").value = "";
+            document.getElementById("amount").value = "";
+            document.getElementById("date").value = "";
+        }
+
+        function deleteExpense(button) {
+            button.parentElement.remove();
+        }
+
+        function filterExpenses() {
+            let searchValue = document.getElementById("search").value.toLowerCase();
+            let expenses = document.querySelectorAll(".expense-item");
+
+            expenses.forEach(expense => {
+                let text = expense.innerText.toLowerCase();
+                if (text.includes(searchValue)) {
+                    expense.style.display = "flex";
+                } else {
+                    expense.style.display = "none";
+                }
+            });
+        }
+
+        function toggleMenu() {
+            let menu = document.getElementById("dropdown-menu");
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
+            } else {
+                menu.style.display = "block";
+            }
+        }
+    </script>
+
+</body>
+</html>
