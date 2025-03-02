@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
     <style>
+        /* Default Dark Theme */
+        :root {
+            --bg-color: #121212;
+            --text-color: white;
+            --box-bg: #1E1E2E;
+            --input-bg: #282A36;
+            --button-bg: linear-gradient(135deg, #007BFF, #00D4FF);
+            --delete-btn-bg: #FF4D4D;
+        }
+
+        /* Light Theme */
+        .light-mode {
+            --bg-color: #F0F0F0;
+            --text-color: black;
+            --box-bg: #FFFFFF;
+            --input-bg: #E0E0E0;
+            --button-bg: linear-gradient(135deg, #FF9800, #FF5722);
+            --delete-btn-bg: #FF0000;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,8 +32,8 @@
             font-family: 'Poppins', sans-serif;
         }
         body {
-            background-color: #121212;
-            color: white;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             text-align: center;
             padding: 20px;
         }
@@ -22,22 +42,22 @@
             margin: auto;
         }
         .expense-form, .expense-list {
-            background: #1E1E2E;
+            background: var(--box-bg);
             padding: 20px;
             margin-top: 20px;
             border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
         input, select {
             padding: 10px;
             margin: 5px;
             border-radius: 5px;
             border: none;
-            background: #282A36;
-            color: white;
+            background: var(--input-bg);
+            color: var(--text-color);
         }
         .btn {
-            background: linear-gradient(135deg, #007BFF, #00D4FF);
+            background: var(--button-bg);
             color: white;
             padding: 10px 15px;
             border: none;
@@ -47,20 +67,19 @@
         }
         .btn:hover {
             transform: scale(1.05);
-            background: linear-gradient(135deg, #00D4FF, #007BFF);
         }
         .expense-item {
-            background: #33354D;
+            background: var(--input-bg);
             margin: 10px 0;
             padding: 15px;
             border-radius: 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
         .delete-btn {
-            background: #FF4D4D;
+            background: var(--delete-btn-bg);
             color: white;
             padding: 8px;
             border: none;
@@ -78,27 +97,27 @@
             background: none;
             border: none;
             font-size: 22px;
-            color: white;
+            color: var(--text-color);
             cursor: pointer;
             margin: 0 10px;
         }
         .dropdown {
             display: none;
             position: absolute;
-            background: #282A36;
+            background: var(--box-bg);
             padding: 10px;
             border-radius: 5px;
-            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
             top: 50px;
         }
         .dropdown a {
-            color: white;
+            color: var(--text-color);
             display: block;
             padding: 5px;
             text-decoration: none;
         }
         .dropdown a:hover {
-            background: #444;
+            background: var(--input-bg);
         }
     </style>
 </head>
@@ -128,7 +147,7 @@
                 <a href="#">Help</a>
             </div>
 
-            <button class="btn">Light Mode</button>
+            <button class="btn" onclick="toggleDarkMode()">Light Mode</button>
         </div>
 
         <!-- Search & Filter -->
@@ -193,10 +212,17 @@
 
         function toggleMenu() {
             let menu = document.getElementById("dropdown-menu");
-            if (menu.style.display === "block") {
-                menu.style.display = "none";
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("light-mode");
+
+            let btn = document.querySelector(".menu-container button:last-child");
+            if (document.body.classList.contains("light-mode")) {
+                btn.innerText = "Dark Mode";
             } else {
-                menu.style.display = "block";
+                btn.innerText = "Light Mode";
             }
         }
     </script>
