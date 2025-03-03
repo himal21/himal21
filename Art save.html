@@ -2,74 +2,95 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Art Gallery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artistic Gallery</title>
+  <!-- Google Fonts for Artistic Look -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Mono&display=swap" rel="stylesheet">
   <style>
     /* Global Styles */
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f9f3e4, #e2d5c3);
+      font-family: 'Roboto Mono', monospace;
+      background: linear-gradient(135deg, #fdfbfb, #ebedee);
       color: #333;
     }
     header {
-      background-color: #6c5b4c;
-      color: #fff;
-      padding: 20px;
+      background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+      padding: 30px;
       text-align: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     header h1 {
       margin: 0;
-      font-size: 2.5rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      color: #fff;
     }
     header p {
-      margin: 5px 0 0;
-      font-size: 1.1rem;
-      font-style: italic;
+      margin: 10px 0 0;
+      font-size: 1.2rem;
+      color: #fff;
     }
     .container {
       max-width: 1000px;
-      margin: 20px auto;
+      margin: 40px auto;
       padding: 0 20px;
     }
+    /* Upload Section */
     .upload-section {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background: rgba(255,255,255,0.9);
+      border: 2px dashed #ccc;
+      padding: 30px;
+      border-radius: 10px;
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
     }
+    /* Hide default file input */
     .upload-section input[type="file"] {
-      margin: 15px 0;
+      display: none;
+    }
+    /* Custom File Upload Button */
+    .custom-file-upload {
+      display: inline-block;
+      padding: 12px 30px;
+      background: linear-gradient(45deg, #fbc2eb, #a6c1ee);
+      color: #fff;
+      border-radius: 25px;
+      cursor: pointer;
       font-size: 1rem;
+      font-weight: bold;
+      transition: background 0.3s ease;
+      margin-bottom: 15px;
+    }
+    .custom-file-upload:hover {
+      background: linear-gradient(45deg, #a6c1ee, #fbc2eb);
     }
     .upload-section button {
-      background-color: #6c5b4c;
+      background: #6c5b4c;
       color: #fff;
-      padding: 10px 20px;
+      padding: 10px 25px;
       border: none;
       border-radius: 25px;
       font-size: 1rem;
       cursor: pointer;
       transition: background 0.3s ease;
+      margin-top: 10px;
     }
     .upload-section button:hover {
-      background-color: #594943;
+      background: #55433f;
     }
     /* Gallery Styles */
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      grid-gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 25px;
     }
     .art-card {
       background: #fff;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.15);
       transition: transform 0.3s ease;
     }
     .art-card:hover {
@@ -77,66 +98,73 @@
     }
     .art-card img {
       width: 100%;
-      height: auto;
-      cursor: pointer;
       display: block;
+      cursor: pointer;
     }
     .art-card textarea {
       width: 100%;
       border: none;
-      resize: vertical;
+      border-top: 1px solid #eee;
       padding: 10px;
-      font-size: 0.95rem;
-      border-top: 1px solid #ddd;
-      outline: none;
+      font-size: 0.9rem;
+      resize: vertical;
+      font-family: 'Roboto Mono', monospace;
     }
     .art-card textarea::placeholder {
-      color: #999;
+      color: #aaa;
     }
-    /* Lightbox Modal */
+    /* Modal (Lightbox) Styles */
     .modal {
-      display: none; /* Hidden by default */
+      display: none;
       position: fixed;
       z-index: 100;
       left: 0;
       top: 0;
       width: 100%;
       height: 100%;
-      overflow: auto;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
     }
     .modal-content {
-      position: relative;
-      margin: 5% auto;
-      max-width: 800px;
       background: #fff;
-      border-radius: 8px;
+      border-radius: 10px;
       overflow: hidden;
+      max-width: 800px;
+      width: 100%;
+      position: relative;
+      animation: fadeIn 0.3s ease;
     }
     .modal-content img {
       width: 100%;
       display: block;
     }
     .modal-description {
-      padding: 15px;
+      padding: 20px;
       font-size: 1rem;
       color: #333;
+      font-family: 'Roboto Mono', monospace;
     }
     .close-btn {
       position: absolute;
       top: 10px;
-      right: 15px;
-      font-size: 2rem;
+      right: 20px;
+      font-size: 2.5rem;
       color: #fff;
       cursor: pointer;
-      z-index: 101;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
     }
     @media (max-width: 600px) {
       header h1 {
-        font-size: 2rem;
+        font-size: 2.5rem;
       }
-      .upload-section button {
-        padding: 8px 16px;
+      .custom-file-upload, .upload-section button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -144,22 +172,23 @@
 <body>
   <!-- Header -->
   <header>
-    <h1>My Art Gallery</h1>
-    <p>Upload, describe, and showcase your art</p>
+    <h1>Artistic Gallery</h1>
+    <p>Upload your art, add a story, and share your creativity</p>
   </header>
-  
+
   <div class="container">
     <!-- Upload Section -->
     <div class="upload-section">
+      <label for="fileInput" class="custom-file-upload">Select Art Files</label>
       <input type="file" id="fileInput" accept="image/*" multiple>
       <br>
       <button onclick="uploadArt()">Upload Art</button>
     </div>
-    
+
     <!-- Gallery -->
     <div class="gallery" id="gallery"></div>
   </div>
-  
+
   <!-- Lightbox Modal -->
   <div id="lightboxModal" class="modal">
     <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -168,7 +197,7 @@
       <div class="modal-description" id="modalDescription"></div>
     </div>
   </div>
-  
+
   <script>
     // Upload art images and create art cards
     function uploadArt() {
@@ -216,7 +245,7 @@
         reader.readAsDataURL(file);
       }
       
-      // Reset file input so same files can be re-selected if needed
+      // Reset file input so that the same file can be re-selected if needed
       input.value = "";
     }
     
@@ -226,7 +255,7 @@
       const modalImg = document.getElementById('modalImage');
       const modalDesc = document.getElementById('modalDescription');
       
-      modal.style.display = 'block';
+      modal.style.display = 'flex';
       modalImg.src = img.src;
       modalDesc.innerText = img.dataset.description || "No description provided.";
     }
