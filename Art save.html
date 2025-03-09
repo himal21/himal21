@@ -72,6 +72,30 @@
       text-align: center;
       margin-top: 20px;
     }
+    .trash-section {
+      margin-top: 40px;
+      padding: 20px;
+      border-top: 2px solid #ff00ff;
+      text-align: center;
+    }
+    .art-name {
+      margin-top: 10px;
+      padding: 5px;
+      width: 60%;
+      border-radius: 5px;
+      border: none;
+      text-align: center;
+    }
+    .selected-art {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .selected-art img {
+      max-width: 80%;
+      border-radius: 10px;
+      display: block;
+      margin: auto;
+    }
   </style>
 </head>
 <body>
@@ -83,9 +107,15 @@
   <div class="container">
     <div class="gallery" id="gallery"></div>
     <div class="upload-section">
+      <input type="text" id="artName" class="art-name" placeholder="Enter Art Name...">
       <label for="fileInput" class="file-label">Choose File</label>
       <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
       <button class="button" onclick="uploadArt()">Upload Art</button>
+    </div>
+    <div class="selected-art" id="selectedArt"></div>
+    <div class="trash-section">
+      <h2>Trash</h2>
+      <div id="trash"></div>
     </div>
   </div>
   <script>
@@ -95,21 +125,23 @@
     function uploadArt() {
       const input = document.getElementById('fileInput');
       const files = input.files;
-      if (!files.length) {
-        alert('Please select an image.');
+      const artName = document.getElementById('artName').value;
+      if (!files.length || !artName.trim()) {
+        alert('Please select an image and enter an art name.');
         return;
       }
       let savedArt = JSON.parse(localStorage.getItem("savedArt")) || [];
       for (let i = 0; i < files.length; i++) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          savedArt.push({ src: e.target.result, description: "" });
+          savedArt.push({ src: e.target.result, name: artName, description: "" });
           localStorage.setItem("savedArt", JSON.stringify(savedArt));
           refreshGallery();
         };
         reader.readAsDataURL(files[i]);
       }
       input.value = "";
+      document.getElementById('artName').value = "";
     }
     function refreshGallery() {
       document.getElementById('gallery').innerHTML = "";
@@ -124,21 +156,21 @@
       const gallery = document.getElementById('gallery');
       const card = document.createElement('div');
       card.className = 'art-card';
+      const nameInput = document.createElement('input');
+      nameInput.className = 'art-name';
+      nameInput.value = artData.name;
+      nameInput.oninput = function() {
+        let savedArt = JSON.parse(localStorage.getItem("savedArt")) || [];
+        savedArt[index].name = nameInput.value;
+        localStorage.setItem("savedArt", JSON.stringify(savedArt));
+      };
       const img = document.createElement('img');
       img.src = artData.src;
       img.alt = "Art";
-      const desc = document.createElement('textarea');
-      desc.placeholder = "Add description...";
-      desc.value = artData.description;
-      desc.oninput = function() {
-        let savedArt = JSON.parse(localStorage.getItem("savedArt")) || [];
-        savedArt[index].description = desc.value;
-        localStorage.setItem("savedArt", JSON.stringify(savedArt));
-      };
       card.onclick = function() {
-        img.style.display = img.style.display === "none" ? "block" : "none";
+        document.getElementById('selectedArt').innerHTML = `<img src="${artData.src}" alt="Art">`;
       };
-      card.appendChild(desc);
+      card.appendChild(nameInput);
       card.appendChild(img);
       gallery.appendChild(card);
     }
