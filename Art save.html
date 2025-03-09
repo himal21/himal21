@@ -3,266 +3,144 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Artistic Gallery</title>
-  <!-- Google Fonts for Artistic Look -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Mono&display=swap" rel="stylesheet">
+  <title>Cyber Art Gallery</title>
   <style>
-    /* Global Styles */
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Roboto Mono', monospace;
-      background: linear-gradient(135deg, #fdfbfb, #ebedee);
-      color: #333;
+      font-family: 'Orbitron', sans-serif;
+      background: #0d0d0d;
+      color: #fff;
+      transition: background 0.3s ease;
+    }
+    .dark-mode {
+      background: #121212;
+      color: #00ffcc;
     }
     header {
-      background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
-      padding: 30px;
+      background: linear-gradient(90deg, #ff0080, #8000ff);
+      padding: 20px;
       text-align: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
-    header h1 {
-      margin: 0;
-      font-family: 'Playfair Display', serif;
-      font-size: 3rem;
-      color: #fff;
+    .button {
+      background: linear-gradient(135deg, #ff00ff, #8000ff);
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: all 0.3s;
     }
-    header p {
-      margin: 10px 0 0;
-      font-size: 1.2rem;
-      color: #fff;
+    .button:hover {
+      transform: scale(1.1);
+      background: linear-gradient(135deg, #8000ff, #ff00ff);
     }
-    .container {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-    /* Upload Section */
-    .upload-section {
-      background: rgba(255,255,255,0.9);
-      border: 2px dashed #ccc;
-      padding: 30px;
-      border-radius: 10px;
-      text-align: center;
-      margin-bottom: 40px;
-    }
-    /* Hide default file input */
-    .upload-section input[type="file"] {
+    .file-input {
       display: none;
     }
-    /* Custom File Upload Button */
-    .custom-file-upload {
+    .file-label {
+      background: linear-gradient(135deg, #ff00ff, #8000ff);
+      padding: 10px 20px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: all 0.3s;
       display: inline-block;
-      padding: 12px 30px;
-      background: linear-gradient(45deg, #fbc2eb, #a6c1ee);
-      color: #fff;
-      border-radius: 25px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: bold;
-      transition: background 0.3s ease;
-      margin-bottom: 15px;
     }
-    .custom-file-upload:hover {
-      background: linear-gradient(45deg, #a6c1ee, #fbc2eb);
-    }
-    .upload-section button {
-      background: #6c5b4c;
-      color: #fff;
-      padding: 10px 25px;
-      border: none;
-      border-radius: 25px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      margin-top: 10px;
-    }
-    .upload-section button:hover {
-      background: #55433f;
-    }
-    /* Gallery Styles */
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 25px;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
     }
     .art-card {
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.15);
-      transition: transform 0.3s ease;
-    }
-    .art-card:hover {
-      transform: translateY(-5px);
+      background: #222;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
     }
     .art-card img {
-      width: 100%;
-      display: block;
-      cursor: pointer;
-    }
-    .art-card textarea {
-      width: 100%;
-      border: none;
-      border-top: 1px solid #eee;
-      padding: 10px;
-      font-size: 0.9rem;
-      resize: vertical;
-      font-family: 'Roboto Mono', monospace;
-    }
-    .art-card textarea::placeholder {
-      color: #aaa;
-    }
-    /* Modal (Lightbox) Styles */
-    .modal {
       display: none;
-      position: fixed;
-      z-index: 100;
-      left: 0;
-      top: 0;
       width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    .modal-content {
-      background: #fff;
       border-radius: 10px;
-      overflow: hidden;
-      max-width: 800px;
-      width: 100%;
-      position: relative;
-      animation: fadeIn 0.3s ease;
     }
-    .modal-content img {
-      width: 100%;
-      display: block;
-    }
-    .modal-description {
-      padding: 20px;
-      font-size: 1rem;
-      color: #333;
-      font-family: 'Roboto Mono', monospace;
-    }
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 2.5rem;
-      color: #fff;
-      cursor: pointer;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 2.5rem;
-      }
-      .custom-file-upload, .upload-section button {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-      }
+    .upload-section {
+      text-align: center;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header>
-    <h1>Artistic Gallery</h1>
-    <p>Upload your art, add a story, and share your creativity</p>
+    <h1>Cyber Art Gallery</h1>
+    <button class="button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <input type="text" id="searchBar" placeholder="Search..." oninput="searchArt()">
   </header>
-
   <div class="container">
-    <!-- Upload Section -->
-    <div class="upload-section">
-      <label for="fileInput" class="custom-file-upload">Select Art Files</label>
-      <input type="file" id="fileInput" accept="image/*" multiple>
-      <br>
-      <button onclick="uploadArt()">Upload Art</button>
-    </div>
-
-    <!-- Gallery -->
     <div class="gallery" id="gallery"></div>
-  </div>
-
-  <!-- Lightbox Modal -->
-  <div id="lightboxModal" class="modal">
-    <span class="close-btn" onclick="closeModal()">&times;</span>
-    <div class="modal-content" id="modalContent">
-      <img id="modalImage" src="" alt="Art">
-      <div class="modal-description" id="modalDescription"></div>
+    <div class="upload-section">
+      <label for="fileInput" class="file-label">Choose File</label>
+      <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
+      <button class="button" onclick="uploadArt()">Upload Art</button>
     </div>
   </div>
-
   <script>
-    // Upload art images and create art cards
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
     function uploadArt() {
       const input = document.getElementById('fileInput');
-      const gallery = document.getElementById('gallery');
       const files = input.files;
-      
       if (!files.length) {
-        alert('Please select one or more images to upload.');
+        alert('Please select an image.');
         return;
       }
-      
+      let savedArt = JSON.parse(localStorage.getItem("savedArt")) || [];
       for (let i = 0; i < files.length; i++) {
-        const file = files[i];
         const reader = new FileReader();
-        
         reader.onload = function(e) {
-          // Create art card container
-          const card = document.createElement('div');
-          card.className = 'art-card';
-          
-          // Create image element
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          img.alt = "Art";
-          // On click, open lightbox modal
-          img.onclick = function() { openModal(img); };
-          
-          // Create description textarea
-          const desc = document.createElement('textarea');
-          desc.placeholder = "Add description...";
-          // On input, update image dataset (so we can show it in modal)
-          desc.oninput = function() {
-            img.dataset.description = desc.value;
-          };
-          
-          // Append image and description to card
-          card.appendChild(img);
-          card.appendChild(desc);
-          
-          // Append card to gallery
-          gallery.appendChild(card);
+          savedArt.push({ src: e.target.result, description: "" });
+          localStorage.setItem("savedArt", JSON.stringify(savedArt));
+          refreshGallery();
         };
-        
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(files[i]);
       }
-      
-      // Reset file input so that the same file can be re-selected if needed
       input.value = "";
     }
-    
-    // Open lightbox modal with the clicked image and its description
-    function openModal(img) {
-      const modal = document.getElementById('lightboxModal');
-      const modalImg = document.getElementById('modalImage');
-      const modalDesc = document.getElementById('modalDescription');
-      
-      modal.style.display = 'flex';
-      modalImg.src = img.src;
-      modalDesc.innerText = img.dataset.description || "No description provided.";
+    function refreshGallery() {
+      document.getElementById('gallery').innerHTML = "";
+      loadSavedArt();
     }
-    
-    // Close modal
-    function closeModal() {
-      document.getElementById('lightboxModal').style.display = 'none';
+    function loadSavedArt() {
+      let savedArt = JSON.parse(localStorage.getItem("savedArt")) || [];
+      document.getElementById('gallery').innerHTML = "";
+      savedArt.forEach((art, index) => displayArt(art, index));
+    }
+    function displayArt(artData, index) {
+      const gallery = document.getElementById('gallery');
+      const card = document.createElement('div');
+      card.className = 'art-card';
+      const img = document.createElement('img');
+      img.src = artData.src;
+      img.alt = "Art";
+      const desc = document.createElement('textarea');
+      desc.placeholder = "Add description...";
+      desc.value = artData.description;
+      desc.oninput = function() {
+        let savedArt = JSON.parse(localStorage.getItem("savedArt")) || [];
+        savedArt[index].description = desc.value;
+        localStorage.setItem("savedArt", JSON.stringify(savedArt));
+      };
+      card.onclick = function() {
+        img.style.display = img.style.display === "none" ? "block" : "none";
+      };
+      card.appendChild(desc);
+      card.appendChild(img);
+      gallery.appendChild(card);
     }
   </script>
 </body>
