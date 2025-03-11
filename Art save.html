@@ -6,7 +6,7 @@
   <title>Cyber Art Gallery</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
-    
+
     body {
       margin: 0;
       padding: 0;
@@ -25,7 +25,7 @@
       text-align: center;
       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
-    .button {
+    .button, .file-label {
       background: linear-gradient(135deg, #ff00ff, #8000ff);
       border: none;
       padding: 10px 20px;
@@ -34,22 +34,19 @@
       cursor: pointer;
       border-radius: 5px;
       transition: all 0.3s;
+      display: inline-block;
+      margin: 5px;
     }
-    .button:hover {
+    .button:hover, .file-label:hover {
       transform: scale(1.1);
       background: linear-gradient(135deg, #8000ff, #ff00ff);
     }
     .file-input {
       display: none;
     }
-    .file-label {
-      background: linear-gradient(135deg, #ff00ff, #8000ff);
-      padding: 10px 20px;
-      color: white;
-      font-size: 1rem;
-      cursor: pointer;
-      border-radius: 5px;
-      display: inline-block;
+    .gallery-container {
+      text-align: center;
+      margin-top: 20px;
     }
     .gallery {
       display: grid;
@@ -62,43 +59,43 @@
       padding: 10px;
       border-radius: 10px;
       text-align: center;
-      position: relative;
     }
     .art-card img {
-      display: block;
       width: 100%;
       border-radius: 10px;
-      transition: transform 0.3s ease;
     }
-    .art-card:hover img {
-      transform: scale(1.05);
-    }
-    .delete-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: red;
-      color: white;
-      border: none;
+    .delete-btn, .download-btn, .delete-all-btn {
+      margin-top: 10px;
       padding: 5px 10px;
       cursor: pointer;
       border-radius: 5px;
+      border: none;
+    }
+    .delete-btn {
+      background: red;
+      color: white;
+    }
+    .delete-all-btn {
+      background: darkred;
+      color: white;
+      font-size: 1rem;
+    }
+    .download-btn {
+      background: green;
+      color: white;
+    }
+    .upload-section {
+      text-align: center;
+      margin-top: 20px;
     }
     .art-name {
       margin-top: 10px;
-      padding: 5px;
+      padding: 8px;
       width: 80%;
       border-radius: 5px;
       border: none;
       text-align: center;
-    }
-    .selected-art {
-      text-align: center;
-      margin-top: 20px;
-    }
-    .selected-art img {
-      max-width: 80%;
-      border-radius: 10px;
+      font-size: 1rem;
     }
   </style>
 </head>
@@ -109,21 +106,23 @@
     <input type="text" id="searchBar" placeholder="Search..." oninput="searchArt()">
   </header>
 
-  <div class="container">
+  <div class="gallery-container">
+    <button class="delete-all-btn" onclick="deleteAllArt()">🗑️ Delete All</button>
     <div class="gallery" id="gallery"></div>
+  </div>
 
-    <div class="upload-section" style="text-align:center;">
-      <input type="text" id="artName" class="art-name" placeholder="Enter Art Name...">
-      <label for="fileInput" class="file-label">Choose File</label>
-      <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
-      <button class="button" onclick="uploadArt()">Upload Art</button>
-    </div>
-
-    <div class="selected-art" id="selectedArt"></div>
+  <div class="upload-section">
+    <input type="text" id="artName" class="art-name" placeholder="Enter Art Name...">
+    <label for="fileInput" class="file-label">Choose File</label>
+    <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
+    <button class="button" onclick="uploadArt()">Upload Art</button>
   </div>
 
   <script>
-    // Dark Mode Toggle with LocalStorage
+    document.querySelector('.file-label').addEventListener('click', function() {
+      document.getElementById('fileInput').click();
+    });
+
     function toggleDarkMode() {
       document.body.classList.toggle("dark-mode");
       localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
@@ -136,30 +135,12 @@
       loadSavedArt();
     };
 
-    // Image Preview Before Upload
-    document.getElementById('fileInput').addEventListener('change', function(event) {
-      const previewContainer = document.getElementById('selectedArt');
-      previewContainer.innerHTML = ""; 
-      for (let file of event.target.files) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          img.style.maxWidth = "100px";
-          img.style.margin = "5px";
-          previewContainer.appendChild(img);
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    // Upload Art and Save to LocalStorage
     function uploadArt() {
       const input = document.getElementById('fileInput');
       const files = input.files;
-      const artName = document.getElementById('artName').value;
+      const artName = document.getElementById('artName').value.trim();
 
-      if (!files.length || !artName.trim()) {
+      if (!files.length || !artName) {
         alert('Please select an image and enter an art name.');
         return;
       }
@@ -211,24 +192,46 @@
 
       const deleteBtn = document.createElement('button');
       deleteBtn.className = 'delete-btn';
-      deleteBtn.innerText = "🗑️";
-      deleteBtn.onclick = function(event) {
-        event.stopPropagation();
+      deleteBtn.innerText = "🗑️ Delete";
+      deleteBtn.onclick = function() {
         let savedArt = JSON.parse(localStorage.getItem("savedArt")) || [];
         savedArt.splice(index, 1);
         localStorage.setItem("savedArt", JSON.stringify(savedArt));
         refreshGallery();
       };
 
+      const downloadBtn = document.createElement('button');
+      downloadBtn.className = 'download-btn';
+      downloadBtn.innerText = "⬇️ Download";
+      downloadBtn.onclick = function() {
+        const link = document.createElement('a');
+        link.href = artData.src;
+        link.download = artData.name + ".png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
       card.appendChild(nameInput);
       card.appendChild(img);
       card.appendChild(deleteBtn);
+      card.appendChild(downloadBtn);
       gallery.appendChild(card);
     }
 
+    function deleteAllArt() {
+      if (confirm("Are you sure you want to delete all artworks?")) {
+        localStorage.removeItem("savedArt");
+        refreshGallery();
+      }
+    }
+
     function searchArt() {
-      let searchValue = document.getElementById('searchBar').value.toLowerCase();
-      refreshGallery();
+      let query = document.getElementById("searchBar").value.toLowerCase();
+      document.querySelectorAll(".art-card").forEach(card => {
+        let name = card.querySelector(".art-name").value.toLowerCase();
+        card.style.display = name.includes(query) ? "block" : "none";
+      });
     }
   </script>
 </body>
