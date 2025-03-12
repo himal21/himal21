@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cyber Art Gallery</title>
@@ -101,6 +104,14 @@
 </head>
 <body>
   <header>
+
+
+    <button class="button" onclick="googleLogin()">Login with Google</button>
+<button class="button" onclick="logout()" style="display:none;" id="logoutBtn">Logout</button>
+<p id="userInfo" style="margin-top: 10px;"></p>
+
+
+
     <h1>Cyber Art Gallery</h1>
     <button class="button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
     <input type="text" id="searchBar" placeholder="Search..." oninput="searchArt()">
@@ -233,6 +244,43 @@
         card.style.display = name.includes(query) ? "block" : "none";
       });
     }
+
+
+    const auth = firebase.auth();
+
+// Google Sign-In
+function googleLogin() {
+   const provider = new firebase.auth.GoogleAuthProvider();
+   auth.signInWithPopup(provider).then(result => {
+      const user = result.user;
+      document.getElementById("userInfo").innerHTML = `Logged in as: ${user.displayName}`;
+      document.getElementById("logoutBtn").style.display = "inline-block";
+   }).catch(error => {
+      console.error("Login Error:", error);
+   });
+}
+
+// Logout
+function logout() {
+   auth.signOut().then(() => {
+      document.getElementById("userInfo").innerHTML = "";
+      document.getElementById("logoutBtn").style.display = "none";
+   }).catch(error => {
+      console.error("Logout Error:", error);
+   });
+}
+
+// Check login status
+auth.onAuthStateChanged(user => {
+   if (user) {
+      document.getElementById("userInfo").innerHTML = `Logged in as: ${user.displayName}`;
+      document.getElementById("logoutBtn").style.display = "inline-block";
+   } else {
+      document.getElementById("userInfo").innerHTML = "";
+      document.getElementById("logoutBtn").style.display = "none";
+   }
+});
+
   </script>
 </body>
 </html>
