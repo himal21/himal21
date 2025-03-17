@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Art Gallery</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: #0a0a0a;
+      color: white;
+      transition: all 0.3s ease-in-out;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: rgba(0, 0, 0, 0.8);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .button {
+      background: black;
+      border: 2px solid white;
+      padding: 10px 20px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .button:hover {
+      background: white;
+      color: black;
+    }
+
+    #searchBar, .art-name {
+      padding: 10px;
+      width: 200px;
+      border-radius: 8px;
+      border: 2px solid white;
+      font-size: 1rem;
+      text-align: center;
+      background: transparent;
+      color: white;
+    }
+
+    .gallery-container {
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .art-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .art-card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .upload-section {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    /* 🌕 Light Mode */
+    .light-mode {
+      background: white;
+      color: black;
+    }
+
+    .light-mode header {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .light-mode .button {
+      background: white;
+      color: black;
+      border: 2px solid black;
+    }
+
+    .light-mode .button:hover {
+      background: black;
+      color: white;
+    }
+
+    /* Light Mode માં Search Bar & Art Name Box દેખાય */
+    .light-mode #searchBar, 
+    .light-mode .art-name {
+      color: black;
+      border: 2px solid black;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Cyber Art Gallery</h1>
+    <div class="header-right">
+      <input type="text" id="searchBar" placeholder="Search..." oninput="searchArt()">
+      <button class="button" onclick="toggleDarkMode()">Toggle Mode</button>
+      <button class="button" onclick="deleteAllArt()">🗑️ Delete All</button>
+    </div>
+  </header>
+
+  <div class="gallery-container">
+    <div class="gallery" id="gallery"></div>
+  </div>
+
+  <div class="upload-section">
+    <input type="text" id="artName" class="art-name" placeholder="Enter Art Name...">
+    <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
+    <button class="button" onclick="uploadArt()">Upload Art</button>
+  </div>
+
+  <script>
+    // 🎨 ડાર્ક & લાઈટ મોડ ટૉગલ કરવા માટે
+    function toggleDarkMode() {
+      document.body.classList.toggle("light-mode");
+      localStorage.setItem("lightMode", document.body.classList.contains("light-mode"));
+    }
+
+    // 🌍 પેજ લોડ થવા પર લાસ્ટ મોડ સેવ રાખે
+    window.onload = function() {
+      if (localStorage.getItem("lightMode") === "true") {
+        document.body.classList.add("light-mode");
+      }
+      loadSavedArt();
+    };
+
+    // 🖼️ નવી આર્ટ અપલોડ કરવી
+    function uploadArt() {
+      const input = document.getElementById('fileInput');
+      const files = input.files;
+      const artName = document.getElementById('artName').value.trim();
+
+      if (!files.length || !artName) {
+        alert('Please select an image and enter an art name.');
+        return;
+      }
+
+      let savedArt = JSON.parse(localStorage.getItem("savedArt")) || [];
+
+      for (let file of files) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          savedArt.push({ src: e.target.result, name: artName });
+          localStorage.setItem("savedArt", JSON.stringify(savedArt));
+          refreshGallery();
+        };
+        reader.readAsDataURL(file);
+      }
+
+      input.value = "";
+      document.getElementById('artName').value = "";
+    }
+
+    // 🔄 ગેલેરીને રિફ્રેશ કરવા માટે
+    function refreshGallery() {
+      document.getElementById('gallery').innerHTML = "";
+      loadSavedArt();
+    }
+
+    // 🎭 સંગ્રહિત આર્ટ લોડ કરવા માટે
+    function loadSavedArt() {
+      let savedArt = JSON.parse(localStorage.getItem("savedArt")) || [];
+      document.getElementById('gallery').innerHTML = "";
+      savedArt.forEach((art, index) => displayArt(art, index));
+    }
+
+    // 🖼️ ગેલેરીમાં આર્ટ બતાવવા માટે
+    function displayArt(artData, index) {
+      const gallery = document.getElementById('gallery');
+      const card = document.createElement('div');
+      card.className = 'art-card';
+
+      const nameInput = document.createElement('input');
+      nameInput.className = 'art-name';
+      nameInput.value = artData.name;
+      nameInput.oninput = function() {
+        let savedArt = JSON.parse(localStorage.getItem("savedArt")) || [];
+        savedArt[index].name = nameInput.value;
+        localStorage.setItem("savedArt", JSON.stringify(savedArt));
+      };
+
+      const img = document.createElement('img');
+      img.src = artData.src;
+      img.alt = "Art";
+
+      card.appendChild(nameInput);
+      card.appendChild(img);
+      gallery.appendChild(card);
+    }
+
+    // ❌ બધા આર્ટ ડિલીટ કરવા માટે
+    function deleteAllArt() {
+      if (confirm("Are you sure you want to delete all artworks?")) {
+        localStorage.removeItem("savedArt");
+        refreshGallery();
+      }
+    }
+
+    // 🔍 સર્ચ ફંક્શન
+    function searchArt() {
+      let query = document.getElementById("searchBar").value.toLowerCase();
+      document.querySelectorAll(".art-card").forEach(card => {
+        let name = card.querySelector(".art-name").value.toLowerCase();
+        card.style.display = name.includes(query) ? "block" : "none";
+      });
+    }
+
+  </script>
+</body>
+</html>
